@@ -1,0 +1,192 @@
+% Title:   UofT Art & Sciences Assignment Sample File
+% Version: 1.00
+% Author:  Kaveh Ghasemloo
+% Date:    Sept. 28, 2012
+%
+% Licence:
+% This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/ or send a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
+\documentclass[11pt]{csc_assignment}
+\usepackage{enumitem}
+
+
+% ----------------------------------------------------------------
+% TODO: Enter the assignment number, your name, and your student number below
+% ----------------------------------------------------------------
+\AssignmentName{ 2}
+\QuestionCount{4}
+\StudentName{Shandheap Shanmuganathan \& Michael Kozakov}
+\StudentNumber{999347185 \& 999301018}
+
+
+% ----------------------------------------------------------------
+\begin{document}
+
+
+\Acknowledgements{
+% ----------------------------------------------------------------
+% TODO: Write your acknowledgements below.
+% ----------------------------------------------------------------
+
+"I declare that I have used the Introduction to Algorithms book and Dasgupta's Algorithms to structure my proofs along with Kaveh's lecture notes to decide on which proof to use in each question."
+
+% ----------------------------------------------------------------
+% Aacknowledgements ends
+% ----------------------------------------------------------------
+}
+\begin{description}
+
+\newpage
+\item[Q1.]
+% ----------------------------------------------------------------
+% TODO: Write your answer to the question below.
+% ----------------------------------------------------------------
+
+\textbf{SOLUTION}
+\\
+
+\textbf{a.} We can use the Bellman-Ford algorithm to find if there is a list of profitable currency exchanges.
+
+The intuition is that we are trying to find cycles where currencies can be exchanged to produce a profitable currency exchange. The Bellman-Ford algorithm finds the shortest path between two nodes, and the main reason we can use the Bellman-Ford algorithm in this solution is because it can detect the existance of negative cycles.
+
+Thus by modifying the properties of the graph so that a negative cycle occurs when the nodes are in a list of profitable currency exchanges, we can get a modified Bellman-Ford algorithm that returns YES when there are profitable currency exchanges otherwise NO.\\
+
+\underline{\textbf{PSEUDOCODE}}
+
+Input: A list of m triples R for exchange rates. Each triple (c, d, r) $\in$ R (where c and d are integers between 1 and n, r is a rational number) means that a unit of currency c can be exchanged for r units of currency d.
+
+Output: YES if there is a list of profitable currency exchanges, otherwise NO.
+
+
+
+\newpage
+\item[Q2.]
+% ----------------------------------------------------------------
+% TODO: Write your answer to the question below.
+% ----------------------------------------------------------------
+\textbf{a.}
+
+\textbf{SOLUTION}
+
+
+\underline{\textbf{PSEUDOCODE}}
+
+Input: The width of the screen L, the list of words in the paragraph W = ($w_1, ..., w_n$).
+
+Output: A presentation of the paragraph with minimum badness.
+
+
+
+\newpage
+\item[Q3.]
+% ----------------------------------------------------------------
+% TODO: Write your answer to the question below.
+% ----------------------------------------------------------------
+
+
+\textbf{SOLUTION}
+
+\textbf{a.} We can use the same intuition of using Ford-Fulkerson max flow algorithm on a Bipartite Matching problem. The algorithm to match each customer with a cellular tower can be converted into a Bipartite Matching problem.
+
+To do this we need to create a graph with each customer and each cellular tower are nodes. Then add two nodes source (s) and sink (t). Then we need to join the s to all the customer nodes and join all the Cellular Towers to t.
+
+Then by iterating through all cellular towers for each customer, we create edges of weight 1 between a customer and tower if the customer can be assigned to that specific tower.
+
+Then we solve our problem by using the Ford-Fulkerson to find maximum flow while ensuring that only k flows out of each cellular tower node to sink t. Then return YES if every customer node is connected to a cellular tower node, otherwise NO.
+
+\underline{\textbf{PSEUDOCODE}}
+
+Input: A list C of n pairs of numbers (x,y), each representing the location of a customer on a plane. A list T of m paits of numbers (x,y), each representing the location of a tower on a plane. Two numbers r (max range) and k (max connections).
+
+Output: YES if it is possible to connect the cell phones to the towers under the restrictions, otherwise NO.
+
+Assume that the circular area (range) for a cellular tower t is denoted RANGE(t).
+
+\clearpage
+
+\textbf{CAN\_ASSIGN\_TOWERS(n, C, m, T, r, k):}
+\begin{enumerate}[leftmargin=5pt]
+	\item[] Create graph G and insert source node (s) and sink node (t)
+	\item[] for i = 0 to n-1
+	\begin{enumerate}
+		\item[] Insert node for customer i ($c_i$) in G
+		\item[] Create edge between s and $c_i$, with capacity 1
+	\end{enumerate}
+	\item[] for i = 0 to m-1
+	\begin{enumerate}
+		\item[] Insert node for cellular tower i ($ct_i$) in G
+		\item[] Create edge between $ct_i$ and t, with capacity k
+	\end{enumerate}
+	\item[] for i = 0 to n-1
+	\begin{enumerate}
+		\item[] for j = 0 to m-1
+		\begin{enumerate}
+			\item[] if $c_i$ in RANGE($ct_j$):
+			\begin{enumerate}
+				\item[] Create edge between $c_i$ and $ct_j$, with capacity 1
+			\end{enumerate}
+		\end{enumerate}
+	\end{enumerate}
+	\item[] Run Ford-Fulkerson on G to find maximum matching
+	\item[] for i = 0 to n-1
+	\begin{enumerate}
+		\item[] if no edges coming out of $c_i$ have weight 1:
+		\begin{enumerate}
+			\item[] return 'NO'
+		\end{enumerate}
+	\end{enumerate}
+	return 'YES'
+\end{enumerate}
+
+\textbf{b.} \underline{\textbf{RUNNING TIME}}
+
+The above algorithm runs within O(Ef), where E is the number of edges in the graph and f is the maximum flow in G. The first two for loops run within O(n) and O(m) respectively. The next for loop takes O(nm) which isn't as expensive as the time complexity of Ford-Fulkerson (O(Ef)). Even the last for loop runs in O(ne) where e is the upper bound on the number of edges between a customer and cellular towers, which can still be bound by O(Ef). \\
+
+\textbf{c.} \underline{\textbf{PROOF THAT ALGORITHM FINDS OPTIMAL SOLUTION}}
+
+\textbf{Lemma 1:}
+Let f be a flow in a flow network G with source s and sink t, and let (S,T) be any cut of G. Then the net flow across (S,T) is f(S,T) = $\|f\|$.
+
+\textbf{Lemma 2:}
+Let G = (V,E) be a bipartite graph with vertex partition V = L $\cup$ R, and let $G^{'}$ = ($V^{'}$ , $E^{'}$) be its corresponding flow network. If M is a matching in G, then there is an integer-valued flow in $G^{'}$ with value $\|f\|$ = $\|M\|$. Conversely, if f is an integer-valued flow in $G^{'}$, then there is a matching M in G with cardinality $\|M\|$ = $\|f\|$.
+\clearpage
+\textbf{Proof}
+
+We first show that a matching M in G corresponds to an integer-valued flow f in $G^{'}$. Define f as follows. If (u,v) $\in$ M, then f(s,u) = f(u,v) = f(v,t) = 1. For all other edges (u,v) $\in$ $E^{'}$, we define f(u,v) = 0. It is simple to verify that f satisfies the capacity constraint and flow conservation.
+
+Intuitively, each edge (u,v) $\in$ M corresponds to one unit of flow in $G^{'}$ that traverses the path s $\rightarrow$ u $\rightarrow$ v $\rightarrow$ t. Moreover, the paths induced by edges in M are vertex-disjoint, except for s and t. The net flow across cut (L $\cup$ \{s\}, R $\cup$ \{t\}) is equal to $\|M\|$; thus, by Lemma 1, the value of the flow is $\|f\|$ = $\|M\|$.
+
+To prove the converse, let f be an integer-valued flow in $G^{'}$, and let
+
+M = {(u,v): u $\in$ L, v $\in$ R, and f(u,v) $>$ 0}.
+
+Each vertex u $\in$ L has only one entering edge, namely (s,u), and its capacity is 1. Thus, each u $\in$ L has at most on unit of flow entering it, and if one unit of flow does enter, by flow conservation, one unit of flow must leave. Furthermore, since f is integer-valued, for each u $\in$ L, the one unit of flow can enter on at most one edge and can leave on at most one edge. Thus, one unit of flow enters u if and only if there is exactly one vertex v $\in$ R such that f(u,v) = 1, and at most one edge leaving each u $\in$ L carries positive flow. A symmetric argument applies to each v $\in$ R. The set M is therefore a matching.
+
+To see that $\|M\|$ = $\|f\|$, observer that for every matched vertex u $\in$ L, we have f(s,u) = 1, and for every edge (u,v) $\in$ E - M, we have f(s,v) = 0. Consequently, f(L $\cup$ \{s\}, R $\cup$ \{t\}), the net flow across cut (L $\cup$ \{s\}, R $\cup$ \{t\}), is equal to $\|M\|$. Applying Lemma 2, we have that $\|f\|$ = f(L $\cup$ \{s\}, R $\cup$ \{t\}) = $\|M\|$.
+
+Based on Lemma 2, we can conclude that a maximum matching in a bipartite graph G corresponds to a maximum flow in its corresponding flow network $G^{'}$, thus we can compute a maximum matching in G by running a maximum-flow algorithm on $G^{'}$.
+
+\newpage
+\item[Q4.]
+% ----------------------------------------------------------------
+% TODO: Write your answer to the question below.
+% ----------------------------------------------------------------
+
+
+\textbf{SOLUTION}
+
+Objective Function: We are trying to minimize cost(f) and therefore we get the following linear program:
+
+\begin{itemize}
+	\item $f_e$ $>=$ 0 $\forall$ e $\in$ E
+	\item $f_e$ $<=$ c(e) $\forall$ e $\in$ E
+	\item $\sum\limits_{(u, v) \in G.E} f(u,v)$ - $\sum\limits_{(v, u) \in G.E} f(v,u)$
+	\item min($\sum\limits_{e \in G.E} f(e)*p(e)$)
+\end{itemize}
+
+% ----------------------------------------------------------------
+% Answer ends
+% ----------------------------------------------------------------
+
+
+\end{description}
+\end{document}
